@@ -1,7 +1,7 @@
 import { Flex, Text, Box, Avatar } from '@chakra-ui/react';
 
 interface ProfileProps {
-  showProfileData: boolean;
+  showProfileData?: boolean;
 }
 
 export default function Profile({ showProfileData }: ProfileProps) {

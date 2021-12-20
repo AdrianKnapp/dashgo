@@ -33,13 +33,15 @@ export default function Header() {
           variant="unstyled"
           onClick={onOpen}
           mr="2"
+          display="flex"
+          alignItems="center"
         >
         </IconButton>
       )}
 
       <Logo />
 
-      <SearchBox />
+      { isWideVersion && <SearchBox />}
 
       <Flex
         align="center"
