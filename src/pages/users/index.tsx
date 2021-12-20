@@ -15,7 +15,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 
-import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import Pagination from '../../components/Pagination';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
@@ -29,7 +28,6 @@ export default function UsersList() {
 
   return (
     <Box>
-      <Header />
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 

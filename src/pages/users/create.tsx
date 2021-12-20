@@ -9,7 +9,6 @@ import {
   Button
 } from '@chakra-ui/react';
 
-import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import Input from '../../components/Form/Input';
 import Link from 'next/link';
@@ -48,7 +47,6 @@ export default function CreateUser() {
 
   return (
     <Box>
-      <Header />
       <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <Sidebar />
 
