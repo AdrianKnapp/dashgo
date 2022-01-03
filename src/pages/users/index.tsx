@@ -13,17 +13,32 @@ import {
   Tbody,
   Text,
   useBreakpointValue,
+  Spinner,
 } from '@chakra-ui/react';
 
 import Sidebar from '../../components/Sidebar';
 import Pagination from '../../components/Pagination';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
+import { useEffect } from 'react';
+
+import { useQuery } from 'react-query';
 
 export default function UsersList() {
+  const { data, isLoading, error } = useQuery('users', async () => {
+    const response = await fetch('http://localhost:3000/api/users');
+    const data = await response.json();
+
+    return data;
+  });
+
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
+  });
+
+  useEffect(() => {
+    
   });
 
   return (
@@ -52,59 +67,71 @@ export default function UsersList() {
             </Link>
           </Flex>
 
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th px={["4", "4", "6"]} color="gray.300" width="8">
-                  <Checkbox colorScheme="pink"/>
-                </Th>
-                <Th>
-                  Usuário
-                </Th>
-                { isWideVersion && (
-                  <Th>
-                    Data de cadastro
-                  </Th>
-                )}
-                { isWideVersion && (
-                  <Th>
-                  </Th>
-                )}
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td px={["4", "4", "6"]}>
-                  <Checkbox colorScheme="pink"/>
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Adrian Knapp</Text>
-                    <Text fontSize="sm" color="gray.300">adrknapp@gmail.com</Text>
-                  </Box>
-                </Td>
-                { isWideVersion && <Td>27 de março, 2021</Td> }
-                { isWideVersion && (
-                  <Td textAlign="right">
-                    <Button
-                      as="a"
-                      cursor="pointer"
-                      size="sm"
-                      fontSize="sm"
-                      colorScheme="purple"
-                      leftIcon={
-                        <Icon as={RiPencilLine} fontSize="16" />
-                      }
-                    >
-                      Editar
-                    </Button>
-                </Td>
-                )}
-              </Tr>
-            </Tbody>
-          </Table>
+          { isLoading ? (
+            <Flex justify="center">
+              <Spinner />
+            </Flex>
+          ) : error ? (
+            <Flex justify="center">
+              <Text>Falha ao obter dados dos usuários</Text>
+            </Flex>
+          ) : (
+            <>
+              <Table colorScheme="whiteAlpha">
+                <Thead>
+                  <Tr>
+                    <Th px={["4", "4", "6"]} color="gray.300" width="8">
+                      <Checkbox colorScheme="pink"/>
+                    </Th>
+                    <Th>
+                      Usuário
+                    </Th>
+                    { isWideVersion && (
+                      <Th>
+                        Data de cadastro
+                      </Th>
+                    )}
+                    { isWideVersion && (
+                      <Th>
+                      </Th>
+                    )}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td px={["4", "4", "6"]}>
+                      <Checkbox colorScheme="pink"/>
+                    </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">Adrian Knapp</Text>
+                        <Text fontSize="sm" color="gray.300">adrknapp@gmail.com</Text>
+                      </Box>
+                    </Td>
+                    { isWideVersion && <Td>27 de março, 2021</Td> }
+                    { isWideVersion && (
+                      <Td textAlign="right">
+                        <Button
+                          as="a"
+                          cursor="pointer"
+                          size="sm"
+                          fontSize="sm"
+                          colorScheme="purple"
+                          leftIcon={
+                            <Icon as={RiPencilLine} fontSize="16" />
+                          }
+                        >
+                          Editar
+                        </Button>
+                    </Td>
+                    )}
+                  </Tr>
+                </Tbody>
+              </Table>
 
-          <Pagination />
+              <Pagination />
+            </>
+          ) }
         </Box>
       </Flex>
     </Box>
