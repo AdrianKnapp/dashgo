@@ -20,25 +20,35 @@ import Sidebar from '../../components/Sidebar';
 import Pagination from '../../components/Pagination';
 import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 import { useQuery } from 'react-query';
 
 export default function UsersList() {
-  const { data, isLoading, error } = useQuery('users', async () => {
+  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
     const response = await fetch('http://localhost:3000/api/users');
     const data = await response.json();
 
-    return data;
+    const users = data.users.map(user => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
+      }
+    });
+
+    return users;
+  }, {
+    staleTime: 1000 * 5, // 5 seconds
   });
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
-  });
-
-  useEffect(() => {
-    
   });
 
   return (
@@ -50,6 +60,9 @@ export default function UsersList() {
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
               Usuários
+              { !isLoading && isFetching && (
+                <Spinner size="sm" color="gray.500" ml="4" />
+              )}
             </Heading>
             <Link href="/users/create" passHref>
               <Button
@@ -98,34 +111,38 @@ export default function UsersList() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  <Tr>
-                    <Td px={["4", "4", "6"]}>
-                      <Checkbox colorScheme="pink"/>
-                    </Td>
-                    <Td>
-                      <Box>
-                        <Text fontWeight="bold">Adrian Knapp</Text>
-                        <Text fontSize="sm" color="gray.300">adrknapp@gmail.com</Text>
-                      </Box>
-                    </Td>
-                    { isWideVersion && <Td>27 de março, 2021</Td> }
-                    { isWideVersion && (
-                      <Td textAlign="right">
-                        <Button
-                          as="a"
-                          cursor="pointer"
-                          size="sm"
-                          fontSize="sm"
-                          colorScheme="purple"
-                          leftIcon={
-                            <Icon as={RiPencilLine} fontSize="16" />
-                          }
-                        >
-                          Editar
-                        </Button>
-                    </Td>
-                    )}
-                  </Tr>
+                  {data.map(user => {
+                    return (
+                      <Tr key={user.id}>
+                        <Td px={["4", "4", "6"]}>
+                          <Checkbox colorScheme="pink"/>
+                        </Td>
+                        <Td>
+                          <Box>
+                            <Text fontWeight="bold">{user.name}</Text>
+                            <Text fontSize="sm" color="gray.300">{user.email}</Text>
+                          </Box>
+                        </Td>
+                        { isWideVersion && <Td>{user.createdAt}</Td> }
+                        { isWideVersion && (
+                          <Td textAlign="right">
+                            <Button
+                              as="a"
+                              cursor="pointer"
+                              size="sm"
+                              fontSize="sm"
+                              colorScheme="purple"
+                              leftIcon={
+                                <Icon as={RiPencilLine} fontSize="16" />
+                              }
+                            >
+                              Editar
+                            </Button>
+                          </Td>
+                        )}
+                      </Tr>
+                    )
+                  })}
                 </Tbody>
               </Table>
 
