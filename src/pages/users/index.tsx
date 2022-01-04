@@ -22,11 +22,11 @@ import { RiAddLine, RiPencilLine } from 'react-icons/ri';
 import Link from 'next/link';
 
 import { useQuery } from 'react-query';
+import api from '../../services/api';
 
 export default function UsersList() {
   const { data, isLoading, isFetching, error } = useQuery('users', async () => {
-    const response = await fetch('http://localhost:3000/api/users');
-    const data = await response.json();
+    const { data } = await api.get('users');
 
     const users = data.users.map(user => {
       return {
