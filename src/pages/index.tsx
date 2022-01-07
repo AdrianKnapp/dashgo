@@ -50,13 +50,15 @@ export default function Home() {
             name="email"
             label="Email" 
             error={errors.email}
-            {...register('email')} />
+            {...register('email')}
+          />
           <Input
             type="password"
             name="password"
             label="Senha"
             error={errors.password}
-            {...register('password')} />
+            {...register('password')}
+          />
         </Stack>
         <Button
           type="submit"
